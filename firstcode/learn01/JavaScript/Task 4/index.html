@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>IFE JavaScript Task 02</title>
+		<style media="screen">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			#outer {
+				margin: 20px auto;
+				width: 400px;
+				text-align: center;
+			}
+			span {
+				display: inline-block;
+				height: 50px;
+				line-height: 50px;
+				padding: 0 10px;
+				margin: 0 2px;
+				color: white;
+				cursor: pointer;
+				background: #f95a5a;
+			}
+		</style>
+		<script type="text/javascript">
+			window.onload = function(){
+				var oInput = document.getElementById("num");
+				var Btn = document.getElementsByTagName("button");
+				var Dis = document.getElementById("display");
+				var oSpan = document.getElementsByTagName("span");
+				var Arr = new Array();
+				Array.prototype.contains = function(obj) {
+					for (var i = 0; i < this.length; i++) {
+						if(this[i] == obj) {
+							return true;
+						}
+					}
+				}
+				oInput.onkeyup = function() {   //只能输入数字
+					this.value = this.value.replace(/[^\d]/, "");
+				}
+				oInput.onfocus = function() {
+					this.select();
+				}
+
+				//左侧入函数
+				Btn[0].onclick = function() {
+					if(chakan()) {
+						Arr.unshift(oInput.value);
+					}
+					display();
+				}
+
+				//右侧入
+				Btn[1].onclick = function() {
+					if(chakan()) {
+						Arr.push(oInput.value);
+					}
+					display();
+				}
+
+				//左侧出
+				Btn[2].onclick = function() {
+					if(Arr.length == 0) {
+						alert("已经为空!");
+					} else {
+						Arr.shift(oInput.value);
+					}
+					display();
+				}
+
+				//右侧出
+				Btn[3].onclick = function() {
+					if(Arr.length == 0) {
+						alert("已经为空!");
+					} else {
+						Arr.pop(oInput.value);
+					}
+					display();
+				}
+
+				//点击某个数字删除
+				function reFresh() {
+					var oSpan = document.getElementsByTagName("span");
+					for (var i = 0; i < oSpan.length; i++) {
+						oSpan[i].index = i;
+						oSpan[i].onclick = function() {
+							Arr.splice(this.index, 1);
+							display();
+						}
+					}
+				}
+
+				function display() {
+					var text = "";
+					for (var i = 0; i < Arr.length; i++) {
+						text += "<span>" + Arr[i] + "</span>";
+					}
+					Dis.innerHTML = text;
+					reFresh();
+				}
+
+				function chakan() {
+					if (oInput.value == "") {
+						alert("输入不能为空!");
+						return false;
+					} else if (Arr.contains(oInput.value)) {
+						alert("该数字已存在!");
+						return false;
+					}
+					return true;
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="outer">
+			<input type="text" id="num">
+			<button type="button">左侧入</button>
+			<button type="button">右侧入</button>
+			<button type="button">左侧出</button>
+			<button type="button">右侧出</button>
+		</div>
+		<center id="display"></center>
+	</body>
+</html>
