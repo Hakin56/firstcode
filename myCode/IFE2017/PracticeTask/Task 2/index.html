@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>IFE 2017</title>
+		<style media="screen">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			body {
+				font: 14px Arial;
+			}
+			#form {
+				width: 500px;
+				margin: 50px auto;
+				padding: 20px 110px 30px 0;
+				border-radius: 8px;
+				text-align: right;
+				border: 1px solid #c6c6c6;
+				box-shadow: 3px 3px 5px #a7a7a7;
+			}
+			#form p {
+				position: relative;
+				height: 70px;
+				line-height: 70px;
+			}
+			#form p label {
+				padding-right: 20px;
+				font-weight: 550;
+			}
+			#form p input {
+				height: 14px;
+				width: 300px;
+				padding: 8px 10px;
+				border: 1.5px solid #bebebe;
+				border-radius: 5px;
+				outline: none;
+			}
+			#form  button {
+				height: 35px;
+				width: 70px;
+				color: white;
+				line-height: 35px;
+				font-size: 15px;
+				background: #2275e3;
+				border: none;
+				outline: none;
+				border-radius: 5px;
+				margin-top: 10px;
+				cursor: pointer;
+			}
+			#form  button:hover {
+				opacity: 0.7;
+			}
+			#form p span {
+				font-size: 10px;
+				position: absolute;
+				display: block;
+				top: 56px;
+				left: 180px;
+				height: 12px;
+				line-height: 12px;
+				text-align: left;
+				width: 150px;
+				color: #828282;
+			}
+			.red input {
+				border-color: #ff3636 !important;
+			}
+			.red span {
+				color: #ff3636 !important;
+			}
+			.green input {
+				border-color: #37db29 !important;
+			}
+			.green span {
+				color: #37db29 !important;
+			}
+			.now {
+				box-shadow: 0 0 2px 1px #9cd5ff;
+				border-color: #4997ff !important;
+				background: #feffee;
+			}
+		</style>
+		<script type="text/javascript">
+			window.onload = function() {
+				var oForm = document.getElementById("form");
+				var oInput = oForm.getElementsByTagName("input");
+				var oP = oForm.getElementsByTagName("p");
+				var oBtn = oForm.getElementsByTagName("button")[0];
+				var oSpan = oForm.getElementsByTagName("span");
+
+				//要返回的文字数组
+				var oInfo = new Array(
+					"必填，长度为4~16个字符",
+					"密码长度为4~16位",
+					"请重复输入密码",
+					"请输入您的邮箱账号",
+					"请输入您的手机号码"
+				);
+				var oState = new Array(5);  //记录每个输入框是否合法数组
+				var oLen = 0;
+
+				for (var i = 0; i < oInput.length; i++) {
+					oP[i].index = i;
+					oInput[i].index = i;
+					oInput[i].onfocus = function() {    //聚焦时
+						oP[this.index].removeAttribute("class");   //清除旧的样式，添加新的样式
+						ChangeStyle(this, "now", oInfo[this.index]);
+					}
+					oInput[i].onblur = function() {    //失去焦点时
+						this.removeAttribute("class");
+						if (this.value == "") {     //如果输入为空
+							ChangeStyle(oP[this.index], "red", "您的输入为空");
+							return ;
+						}
+						switch(this.index) {    //判断是那个输入框
+							case 0: {
+								oLen = getStrLen(this.value);
+								if (oLen >=4 && oLen <= 16) {
+									ChangeStyle(oP[this.index], "green", "名称可用");
+									oState[this.index] = 1;
+								} else {
+									ChangeStyle(oP[this.index], "red", "名称不可用");
+									oState[this.index] = 0;
+								}
+								break;
+								}
+							case 1: {
+								oLen = getStrLen(this.value);
+								if (oLen >=4 && oLen <= 16) {
+									ChangeStyle(oP[this.index], "green", "密码可用");
+									oState[this.index] = 1;
+								} else {
+									ChangeStyle(oP[this.index], "red", "密码不可用");
+									oState[this.index] = 0;
+								}
+
+								//更改第一个密码时，也要检查确认密码。
+								if(oInput[this.index + 1].value != ""){
+									if (this.value == oInput[this.index + 1].value) {
+										ChangeStyle(oP[this.index + 1], "green", "输入密码一致");
+										oState[this.index + 1] = 1;
+									} else {
+										ChangeStyle(oP[this.index + 1], "red", "两次输入密码不一致");
+										oState[this.index + 1] = 0;
+									}
+								}
+								break;
+							}
+							case 2: {
+								if (this.value == oInput[this.index - 1].value) {
+									ChangeStyle(oP[this.index], "green", "输入密码一致");
+									oState[this.index] = 1;
+								} else {
+									ChangeStyle(oP[this.index], "red", "两次输入密码不一致");
+									oState[this.index] = 0;
+								}
+								break;
+							}
+							case 3: {
+								//邮箱的正则匹配式
+								var check1 = new RegExp(/^[a-zA-Z0-9\.\_]+[@]\w+[.][a-zA-Z]+$/);
+								if (check1.test(this.value)) {
+									ChangeStyle(oP[this.index], "green", "邮箱可用");
+									oState[this.index] = 1;
+								} else {
+									ChangeStyle(oP[this.index], "red", "邮箱格式不正确");
+									oState[this.index] = 0;
+								}
+								break;
+							}
+							case 4: {
+								//电话号码正则
+								var check2 = RegExp(/^1[3578][0-9]{9}$/);
+								if (check2.test(this.value)) {
+									ChangeStyle(oP[this.index], "green", "手机号码可用");
+									oState[this.index] = 1;
+								} else {
+									ChangeStyle(oP[this.index], "red", "手机号码输入不正确");
+									oState[this.index] = 0;
+								}
+								break;
+							}
+						}
+					}
+				}
+				oBtn.onclick = function() {
+					for (var i = 0; i < oState.length; i++) {
+						if(oState[i] == 1)     //通过状态数组oState判断是否全部合法
+						{} else {
+							alert("提交失败！")
+							return ;
+						}
+					}
+					alert("提交成功！");
+				}
+
+				//改变样式的函数
+				function ChangeStyle(elem, color, str) {
+					elem.className = color;
+					oSpan[elem.index].innerHTML = str;
+				}
+
+				//求字符串长度。ES6新内容。还需要学习。
+				function getStrLen (str) {
+					var enLen = 0;
+					var zhLen = 0;
+					for (let ch of str) {
+						if (isASCII(ch))
+							enLen++;
+						else
+							zhLen++;
+					}
+					return enLen + zhLen * 2;   //中文字符占两个长度
+				}
+
+				function isASCII (c) {
+						return c.codePointAt(0) <= 0xFF;   //判断是否是中文字符
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<form id="form">
+			<p>
+				<label>名称</label>
+				<input type="text">
+				<span></span>
+			</p>
+			<p>
+				<label>密码</label>
+				<input type="password">
+				<span></span>
+			</p>
+			<p>
+				<label>密码确认</label>
+				<input type="password">
+				<span></span>
+			</p>
+			<p>
+				<label>邮箱</label>
+				<input type="text">
+				<span></span>
+			</p>
+			<p>
+				<label>手机</label>
+				<input type="text">
+				<span></span>
+			</p>
+			<button type="button">提&nbsp;交</button>
+		</form>
+	</body>
+</html>

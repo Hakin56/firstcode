@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>IFE JavaScript Task 02</title>
+		<style media="screen">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			#outer {
+				margin: 20px auto;
+				width: 400px;
+				text-align: center;
+			}
+			#display {
+				position: absolute;
+				width: 100%;
+				bottom: 50px;
+				text-align: center;
+				border-bottom: 2px solid #5e5e5e;
+			}
+			span {
+				text-indent: -9999px;
+				display: inline-block;
+				vertical-align: bottom;
+				width: 18px;
+				margin: 0 1px;
+				color: white;
+				cursor: pointer;
+				background: #f95a5a;
+			}
+		</style>
+		<script type="text/javascript">
+			window.onload = function(){
+				var oInput = document.getElementById("num");
+				var Btn = document.getElementsByTagName("button");
+				var Dis = document.getElementById("display");
+				var oSpan = document.getElementsByTagName("span");
+				var Arr = new Array();
+				oInput.onkeyup = function() {   //只能输入数字
+					this.value = this.value.replace(/[^\d]/, "");
+				}
+				oInput.onfocus = function() {   //自动聚焦
+					this.select();
+				}
+
+				//左侧入函数
+				var Len = 0;
+				Btn[0].onclick = function() {
+
+					if(chakan()) {
+						Arr.length < 60 ? Arr.unshift(parseInt(oInput.value)) : (alert("最大长度为60！"));
+					}
+					display();
+				}
+
+				//右侧入
+				Btn[1].onclick = function() {
+					if(chakan()) {
+						Arr.length < 60 ? Arr.push(parseInt(oInput.value)) : (alert("最大长度为60！"));
+					}
+					display();
+				}
+
+				//左侧出
+				Btn[2].onclick = function() {
+					if(Arr.length == 0) {
+						alert("已经为空!");
+					} else {
+						Arr.shift(oInput.value);
+					}
+					display();
+				}
+
+				//右侧出
+				Btn[3].onclick = function() {
+					if(Arr.length == 0) {
+						alert("已经为空!");
+					} else {
+						Arr.pop(oInput.value);
+					}
+					display();
+				}
+
+				//排序按钮(从小到大)
+				Btn[4].onclick = function() {
+					// Arr.sort(function(a,b){return a - b;});
+					//冒泡排序具体过程
+					var oNum = new Number();
+					for (var i = 0; i < Arr.length - 1; i++) {
+						for (var j = 1; j < Arr.length - i; j++) {
+							if (Arr[j-1] > Arr[j]) {
+								oNum = Arr[j];
+								Arr[j] = Arr[j-1];
+								Arr[j-1] = oNum;
+							}
+						}
+					}
+					display();
+				}
+
+				//排序按钮(从大到小)
+				Btn[5].onclick = function() {
+					// Arr.sort(function(a,b){return b - a;});
+					//冒泡排序具体过程
+					var oNum = new Number();
+					for (var i = 0; i < Arr.length - 1; i++) {
+						for (var j = 1; j < Arr.length - i; j++) {
+							if (Arr[j-1] < Arr[j]) {
+								oNum = Arr[j];
+								Arr[j] = Arr[j-1];
+								Arr[j-1] = oNum;
+							}
+						}
+					}
+					display();
+				}
+
+				//更新显示内容
+				function reFresh() {
+					var oSpan = document.getElementsByTagName("span");
+					for (var i = 0; i < oSpan.length; i++) {
+						oSpan[i].style.height = parseInt(oSpan[i].innerHTML) * 4.5 + "px";  //根据数字计算高度
+						oSpan[i].index = i;
+						oSpan[i].onclick = function() {    //点击删除
+							Arr.splice(this.index, 1);
+							display();
+						}
+					}
+				}
+
+				//显示数组元素，重新获取span
+				function display() {
+					var text = "";
+					for (var i = 0; i < Arr.length; i++) {
+						text += "<span>" + Arr[i] + "</span>";
+					}
+					Dis.innerHTML = text;
+					reFresh();
+				}
+
+				//检查输入是否合法
+				function chakan() {
+					var flag = parseInt(oInput.value);
+					if (!flag) {
+						alert("输入不能为空!");
+						return false;
+					} else if (flag < 10 || flag > 100) {
+						alert("请输入10-100范围内的数字！");
+						return false;
+					}
+					return true;
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="outer">
+			<input type="text" id="num">
+			<button type="button">左侧入</button>
+			<button type="button">右侧入</button>
+			<button type="button">左侧出</button>
+			<button type="button">右侧出</button>
+			<button type="button">排序(从小到大)</button>
+			<button type="button">排序(从大到小)</button>
+		</div>
+		<center id="display"></center>
+	</body>
+</html>

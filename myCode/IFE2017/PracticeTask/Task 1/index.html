@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>IFE 2017</title>
+		<style media="screen">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			body {
+				font: 14px Arial;
+			}
+			#form {
+				width: 500px;
+				margin: 50px auto;
+				padding: 20px;
+				border-radius: 8px;
+				text-align: center;
+				border: 1px solid #c6c6c6;
+				box-shadow: 3px 3px 5px #a7a7a7;
+			}
+			#form p {
+				position: relative;
+				height: 70px;
+				line-height: 70px;
+			}
+			#form p label {
+				padding-right: 20px;
+				font-weight: 550;
+			}
+			#form p input {
+				height: 14px;
+				padding: 8px 10px;
+				border: 1.5px solid #bebebe;
+				border-radius: 5px;
+				outline: none;
+			}
+			#form p button {
+				height: 32px;
+				width: 45px;
+				color: white;
+				line-height: 32px;
+				background: #2275e3;
+				border: none;
+				outline: none;
+				border-radius: 5px;
+				margin-left: 20px;
+				cursor: pointer;
+			}
+			#form p button:hover {
+				opacity: 0.7;
+			}
+			#form p span {
+				font-size: 10px;
+				position: absolute;
+				display: block;
+				top: 56px;
+				left: 152px;
+				height: 12px;
+				line-height: 12px;
+				text-align: left;
+				width: 150px;
+				color: #828282;
+			}
+			.red input {
+				border-color: #ff3636 !important;
+			}
+			.red span {
+				color: #ff3636 !important;
+			}
+			.green input {
+				border-color: #37db29 !important;
+			}
+			.green span {
+				color: #37db29 !important;
+			}
+			.now {
+				border-color: #2830f7 !important;
+				background: #fdffe4;
+			}
+		</style>
+		<script type="text/javascript">
+			window.onload = function() {
+				var oForm = document.getElementById("form");
+				var oInput = oForm.getElementsByTagName("input");
+				var oP = oForm.getElementsByTagName("p");
+				var oBtn = oForm.getElementsByTagName("button");
+				var oSpan = oForm.getElementsByTagName("span");
+				var oInfo = new Array(
+					"必填，长度为4~16个字符",
+					"姓名不能为空",
+					"名称格式正确",
+					"长度为4~16个字符"
+				);
+				for (var i = 0; i < oInput.length; i++) {
+					oInput[i].index = i;
+					oBtn[i].index = i;
+					oInput[i].onfocus = function() {   //聚焦时
+						oP[this.index].removeAttribute("class");    //清除旧的样式
+						this.className = "now";    //高亮输入框
+						oSpan[this.index].innerHTML = oInfo[0];    //显示下方文字
+					}
+					oInput[i].onblur = function() {  //失去焦点是清空所有样式
+						this.removeAttribute("class");
+						oP[this.index].removeAttribute("class");
+					}
+					oBtn[i].onclick = function() {
+						if (oInput[this.index].value == "") {  //输入框为空时改变输入框样式和显示文字
+							oP[this.index].className = "red";
+							oSpan[this.index].innerHTML = oInfo[1];
+							return ;
+						}
+						var oStr = oInput[this.index].value;
+						var oNum = getStrLen(oStr);     //获得输入内容并求得长度
+
+						if (oNum >= 4 && oNum <= 16) {	//符合要求时绿色显示
+							oP[this.index].className = "green";
+							oSpan[this.index].innerHTML = oInfo[2];
+						} else {    //不合法时显示红色，相应的文字
+							oP[this.index].className = "red";
+							oSpan[this.index].innerHTML = oInfo[3];
+						}
+					}
+				}
+
+				//求字符串长度。ES6新内容。还需要学习。
+				function getStrLen (str) {
+					var enLen = 0;
+					var zhLen = 0;
+					for (let ch of str) {
+						if (isASCII(ch))
+							enLen++;
+						else
+							zhLen++;
+					}
+					return enLen + zhLen * 2;   //中文字符占两个长度
+				}
+
+				function isASCII (c) {
+						return c.codePointAt(0) <= 0xFF;   //判断是否是中文字符
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<form id="form">
+			<p>
+				<label>名称</label>
+				<input type="text">
+				<button type="button">验证</button>
+				<span></span>
+			</p>
+
+			<p>
+				<label>名称</label>
+				<input type="text">
+				<button type="button">验证</button>
+				<span></span>
+			</p>
+			<p>
+				<label>名称</label>
+				<input type="text">
+				<button type="button">验证</button>
+				<span></span>
+			</p>
+		</form>
+	</body>
+</html>
