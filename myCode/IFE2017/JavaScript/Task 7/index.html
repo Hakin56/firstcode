@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>IFE JavaScript Task 03</title>
+		<style media="screen">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			div {
+				border: 1px solid #4f4f4f;
+				padding: 8px 5px;
+				margin: 2px;
+				display: flex;
+				box-flex: 1.0
+				-moz-box-flex: 1.0;
+				-webkit-box-flex: 1.0;
+				flex-grow: 1;
+				background: white;
+			}
+			#outer {
+				width: 400px;
+				height: 100px;
+				margin: 20px auto;
+				display: flex;
+			}
+			.btn {
+				margin: 40px auto 0;
+				width: 200px;
+				text-align: center;
+			}
+			.dis {
+				background: #6b83ff !important;
+				border-color: red;
+			}
+		</style>
+		<script type="text/javascript">
+			window.onload = function() {
+				var oDiv = document.getElementsByTagName("div");
+				var oBtn = document.getElementsByTagName("button");
+				var qian = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+				oBtn[0].onclick = function() {
+					for (var i = 0; i < oDiv.length; i++) {
+						(function(i){
+							oDiv[i].className = "dis";
+							setTimeout(function() {
+								oDiv[i].removeAttribute("class");
+							}, 1000);
+						})(i);
+					}
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="outer">
+			<div id="tree1">
+				<div id="tree1">
+					<div></div>
+					<div></div>
+				</div>
+				<div id="tree1">
+					<div></div>
+					<div></div>
+				</div>
+			</div>
+			<div id="tree1">
+				<div id="tree1">
+					<div></div>
+					<div></div>
+				</div>
+				<div id="tree1">
+					<div></div>
+					<div></div>
+				</div>
+			</div>
+		</div>
+		<footer class="btn">
+			<button type="button">前序遍历</button>
+			<button type="button">中序遍历</button>
+			<button type="button">后序遍历</button>
+		</footer>
+	</body>
+</html>
