@@ -9,39 +9,108 @@
 				margin: 0;
 			}
 			body {
-				font: 14px Arial;
+				font: 12px Arial;
 			}
 			#form {
 				width: 500px;
 				margin: 50px auto;
-				padding: 20px 0;
+				padding: 30px 0;
 				border-radius: 8px;
 				text-align: right;
 				border: 1px solid #c6c6c6;
 				box-shadow: 3px 3px 5px #a7a7a7;
 			}
 			#form p {
-				line-height: 30px;
+				line-height: 60px;
+			}
+			#list-1 {
 				text-align: center;
 			}
-			#form p input {
-				border: 2px #1e0aff;
-				color: red;
-			}
-			#form p input:nth-child(3) {
+			#list-1 input:nth-child(3) {
 				margin-left: 130px;
 			}
-			#form p label {
+			#list-1 label {
 				padding-left: 5px;
+			}
+			#list-2, #list-3 {
+				padding-right: 90px;
+			}
+			#list-2 label, #list-3 label {
+				padding-right: 10px;
+			}
+			#list-2 select {
+				width: 100px;
+				height: 25px;
+				padding: 0 5px;
+				border: 1px solid #454545;
+				border-radius: 5px;
+			}
+			#list-2 select:nth-child(3) {
+				margin-left: 30px;
+				width: 160px;
+			}
+			#list-3 input {
+				width: 283px;
+				height: 25px;
+				padding: 0 5px;
+				border: 1px solid #454545;
+				border-radius: 5px;
 			}
 		</style>
 		<script type="text/javascript">
 			window.onload = function() {
-				var school = document.getElementsByName("school");
+				var school = document.getElementsByName("atschool");
+				var citySchool = document.getElementsByName("city-school")[0];
+				var listOne = document.getElementById("list-2");
+				var listTwo = document.getElementById("list-3");
+				var select = document.getElementById("list-2").getElementsByTagName("select");
+				var SchName = new Array(
+					["清华大学", "北京大学", "北京交通大学", "北京航空航天大学"],
+					["复旦大学", "上海外国语大学", "上海交通大学", "同济大学"],
+					["哈尔滨工业大学", "哈尔滨工程大学", "东北林业大学", "哈尔滨商业大学"]
+				);
+
+				//当选择的城市发生改变的时候，改变相应的学校
+				select[0].onchange = function() {
+					var option = "";
+					switch(this.value) {
+						case "北京":{
+							for (var i = 0; i < SchName[0].length; i++) {
+								option += "<option>" + SchName[0][i] + "</option>";
+							}
+							break;
+						}
+						case "上海":{
+							for (var i = 0; i < SchName[1].length; i++) {
+								option += "<option>" + SchName[1][i] + "</option>";
+							}
+							break;
+						}
+						case "哈尔滨":{
+							for (var i = 0; i < SchName[2].length; i++) {
+								option += "<option>" + SchName[2][i] + "</option>";
+							}
+							break;
+						}
+					}
+					select[1].innerHTML = option;   //改变学校选框的内容
+				}
+
+				//在校生，非在校生转换
 				for (var i = 0; i < school.length; i++) {
 					school[i].index = i;
 					school[i].onclick = function() {
-						this.checked && (console.log(this.value));
+						switch(this.index) {
+							case 0 :{
+								listOne.style.display = "block";
+								listTwo.style.display = "none";
+								break;
+							}
+							case 1 :{
+								listTwo.style.display = "block";
+								listOne.style.display = "none";
+							}
+						}
 					}
 				}
 			}
@@ -49,17 +118,27 @@
 	</head>
 	<body>
 		<form id="form">
-			<p>
-				<input type="radio" name="school" value="0"><label for="input">在校生</label>
-				<input type="radio" name="school" value="1" class=""><label for="input">非在校生</label>
+			<p id="list-1">
+				<input type="radio" name="atschool" value="0" checked><label for="input">在校生</label>
+				<input type="radio" name="atschool" value="1" class=""><label for="input">非在校生</label>
 			</p>
-			<p>
+			<p id="list-2">
 				<label for="select">学校</label>
 				<select name="city">
-					<option value="北京">北京</option>
+					<option value="北京" selected="selected">北京</option>
 					<option value="哈尔滨">哈尔滨</option>
 					<option value="上海">上海</option>
 				</select>
+				<select name="city-school">
+					<option>清华大学</option>
+					<option>北京大学</option>
+					<option>北京交通大学</option>
+					<option>北京航空航天大学</option>
+				</select>
+			</p>
+			<p id="list-3" style="display: none;">
+				<label for="input">就业单位</label>
+				<input type="text">
 			</p>
 		</form>
 	</body>

@@ -8,163 +8,125 @@
 				padding: 0;
 				margin: 0;
 			}
-			#outer {
-				margin: 20px auto;
-				width: 400px;
-				text-align: center;
+			body {
+				font: 13px/1.5 Arial;
 			}
-			#display {
-				position: absolute;
-				width: 100%;
-				bottom: 50px;
-				text-align: center;
-				border-bottom: 2px solid #5e5e5e;
+			button {
+				border-radius: 5px;
+				cursor: pointer;
+				background: white;
+				border: 1px solid #b9b9b9;
+				font-weight: bold;
+			}
+			button:hover {
+				background: #ccc;
+				color: white;
 			}
 			span {
-				text-indent: -9999px;
 				display: inline-block;
-				vertical-align: bottom;
-				width: 18px;
-				margin: 0 1px;
+				padding: 4px 10px;
+				margin: 1px;
 				color: white;
+				font-size: 1.3em;
+				font-weight: bold;
+				border-radius: 5px;
 				cursor: pointer;
-				background: #f95a5a;
+				background: #00dfcb;
+			}
+			.find {
+				background: #ff2020;
+			}
+			#outer {
+				margin: 20px auto;
+				width: 580px;
+				border: 1px solid #d5d5d5;
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 3px 3px 5px #cfcfcf;
+			}
+			#control {
+				width: 580px;
+				display: flex;
+			}
+			#control #tarea {
+				resize: none;
+				width: 470px;
+				height: 125px;
+				border: 1px solid #8c8c8c;
+				padding: 10px;
+				border-radius: 5px;
+				flex-grow: 1.0;
+				font-size: 2em;
+			}
+			#control div {
+				display: flex;
+				flex-grow: 1.0;
+				flex-direction: column;
+				margin-left: 10px;
+			}
+			#control div button {
+				flex-grow: 1.0;
+				margin: 3px 0;
+				width: 100%;
+			}
+			#search {
+				text-align: center;
+				height: 50px;
+				margin: 10px 0;
+				line-height: 50px;
+			}
+			#search input {
+				padding: 6px 10px;
+				width: 200px;
+				border-radius: 5px;
+				border:1px solid #8c8c8c;
+				margin-right: 15px;
+			}
+			#search button {
+				width: 55px;
+				height: 30px;
+			}
+			#display {
+				border: 1px solid #8c8c8c;
+				height: 200px;
+				border-radius: 5px;
+				padding: 10px;
 			}
 		</style>
 		<script type="text/javascript">
-			window.onload = function(){
-				var oInput = document.getElementById("num");
-				var Btn = document.getElementsByTagName("button");
-				var Dis = document.getElementById("display");
-				var oSpan = document.getElementsByTagName("span");
-				var Arr = new Array();
-				oInput.onkeyup = function() {   //只能输入数字
-					this.value = this.value.replace(/[^\d]/, "");
-				}
-				oInput.onfocus = function() {   //自动聚焦
-					this.select();
-				}
-
-				//左侧入函数
-				var Len = 0;
-				Btn[0].onclick = function() {
-
-					if(chakan()) {
-						Arr.length < 60 ? Arr.unshift(parseInt(oInput.value)) : (alert("最大长度为60！"));
-					}
-					display();
-				}
-
-				//右侧入
-				Btn[1].onclick = function() {
-					if(chakan()) {
-						Arr.length < 60 ? Arr.push(parseInt(oInput.value)) : (alert("最大长度为60！"));
-					}
-					display();
-				}
-
-				//左侧出
-				Btn[2].onclick = function() {
-					if(Arr.length == 0) {
-						alert("已经为空!");
-					} else {
-						Arr.shift(oInput.value);
-					}
-					display();
-				}
-
-				//右侧出
-				Btn[3].onclick = function() {
-					if(Arr.length == 0) {
-						alert("已经为空!");
-					} else {
-						Arr.pop(oInput.value);
-					}
-					display();
-				}
-
-				//排序按钮(从小到大)
-				Btn[4].onclick = function() {
-					// Arr.sort(function(a,b){return a - b;});
-					//冒泡排序具体过程
-					var oNum = new Number();
-					for (var i = 0; i < Arr.length - 1; i++) {
-						for (var j = 1; j < Arr.length - i; j++) {
-							if (Arr[j-1] > Arr[j]) {
-								oNum = Arr[j];
-								Arr[j] = Arr[j-1];
-								Arr[j-1] = oNum;
-							}
-						}
-					}
-					display();
-				}
-
-				//排序按钮(从大到小)
-				Btn[5].onclick = function() {
-					// Arr.sort(function(a,b){return b - a;});
-					//冒泡排序具体过程
-					var oNum = new Number();
-					for (var i = 0; i < Arr.length - 1; i++) {
-						for (var j = 1; j < Arr.length - i; j++) {
-							if (Arr[j-1] < Arr[j]) {
-								oNum = Arr[j];
-								Arr[j] = Arr[j-1];
-								Arr[j-1] = oNum;
-							}
-						}
-					}
-					display();
-				}
-
-				//更新显示内容
-				function reFresh() {
-					var oSpan = document.getElementsByTagName("span");
-					for (var i = 0; i < oSpan.length; i++) {
-						oSpan[i].style.height = parseInt(oSpan[i].innerHTML) * 4.5 + "px";  //根据数字计算高度
-						oSpan[i].index = i;
-						oSpan[i].onclick = function() {    //点击删除
-							Arr.splice(this.index, 1);
-							display();
-						}
-					}
-				}
-
-				//显示数组元素，重新获取span
-				function display() {
-					var text = "";
-					for (var i = 0; i < Arr.length; i++) {
-						text += "<span>" + Arr[i] + "</span>";
-					}
-					Dis.innerHTML = text;
-					reFresh();
-				}
-
-				//检查输入是否合法
-				function chakan() {
-					var flag = parseInt(oInput.value);
-					if (!flag) {
-						alert("输入不能为空!");
-						return false;
-					} else if (flag < 10 || flag > 100) {
-						alert("请输入10-100范围内的数字！");
-						return false;
-					}
-					return true;
-				}
+			window.onload = function() {
+				var Display = document.getElementById("display");
+				var textArea = document.getElementById("tarea");
+				var oInput = document.getElementById("input");
+				var oBtn = document.getElementsByTagName("button");
 			}
 		</script>
 	</head>
 	<body>
 		<div id="outer">
-			<input type="text" id="num">
-			<button type="button">左侧入</button>
-			<button type="button">右侧入</button>
-			<button type="button">左侧出</button>
-			<button type="button">右侧出</button>
-			<button type="button">排序(从小到大)</button>
-			<button type="button">排序(从大到小)</button>
+			<div id="control">
+				<textarea id="tarea"></textarea>
+				<div class="btn">
+					<button type="button">左侧入</button>
+					<button type="button">右侧入</button>
+					<button type="button">左侧出</button>
+					<button type="button">右侧出</button>
+				</div>
+			</div>
+			<div id="search">
+				<input id="input" type="text" placeholder="查询关键字">
+				<button type="button">查询</button>
+			</div>
+			<div id="display">
+				<span class="find">11</span>
+				<span>22</span>
+				<span>11</span>
+				<span>22</span>
+				<span>11</span>
+				<span>22</span>
+				<span>11</span>
+				<span>22</span>
+			</div>
 		</div>
-		<center id="display"></center>
 	</body>
 </html>
