@@ -17,6 +17,7 @@
 				background: white;
 				border: 1px solid #b9b9b9;
 				font-weight: bold;
+				outline: none;
 			}
 			button:hover {
 				background: #ccc;
@@ -36,6 +37,10 @@
 			.find {
 				background: #ff2020;
 			}
+			.focus {
+				border-color: #1464ff !important;
+				box-shadow: 0 0 5px 1px #7d92ff;
+			}
 			#outer {
 				margin: 20px auto;
 				width: 580px;
@@ -54,6 +59,7 @@
 				height: 125px;
 				border: 1px solid #8c8c8c;
 				padding: 10px;
+				outline: none;
 				border-radius: 5px;
 				flex-grow: 1.0;
 				font-size: 2em;
@@ -81,6 +87,7 @@
 				border-radius: 5px;
 				border:1px solid #8c8c8c;
 				margin-right: 15px;
+				outline: none;
 			}
 			#search button {
 				width: 55px;
@@ -96,9 +103,113 @@
 		<script type="text/javascript">
 			window.onload = function() {
 				var Display = document.getElementById("display");
-				var textArea = document.getElementById("tarea");
 				var oInput = document.getElementById("input");
 				var oBtn = document.getElementsByTagName("button");
+				var textArea = document.getElementById("tarea");
+				var oSpan = document.getElementsByTagName("span");
+				var spanArr = new Array();
+
+				//两个输入框，聚焦和失去焦点式改变边框样式
+				textArea.onfocus = function() {
+					this.className = "focus";
+					this.select();
+				}
+				textArea.onblur = function() {
+					this.removeAttribute("class");
+				}
+				oInput.onfocus = function() {
+					this.className = "focus";
+					this.select();
+				}
+				oInput.onblur = function() {
+					this.removeAttribute("class");
+				}
+
+				//左入
+				oBtn[0].onclick = function() {
+					if (checkIn()) {
+						spanArr = checkIn().concat(spanArr);
+					}
+					display();
+				}
+
+				//右入
+				oBtn[1].onclick = function() {
+					if (checkIn()) {
+						spanArr =  spanArr.concat(checkIn());
+					}
+					display();
+				}
+
+				//左出
+				oBtn[2].onclick = function() {
+					if (spanArr.length == 0) {
+						alert("已经为空！");
+						return ;
+					}
+					spanArr.shift();
+					display();
+				}
+
+				//右出
+				oBtn[3].onclick = function() {
+					if (spanArr.length == 0) {
+						alert("已经为空！");
+						return ;
+					}
+					spanArr.pop();
+					display();
+				}
+
+				//查询按钮
+				oBtn[4].onclick = function() {
+					eval("var ss = /" + oInput.value + "/");    //动态生成正则表达式
+					for (var i = 0; i < oSpan.length; i++) {
+						oSpan[i].removeAttribute("class");
+						if (ss.test(oSpan[i].innerHTML)) {    //正则匹配，成功则改变样式
+							oSpan[i].className = "find";
+						}
+					}
+				}
+
+				//对textarea做输入检查。对出入的内容进行处理，生成数组返回
+				function checkIn() {
+					var strArr = textArea.value.split(/[,.、，。(\s)+]/);
+
+					var i = strArr.length;
+					while (i >= 0) {
+						if (strArr[i] == "") {
+							strArr.splice(i, 1);
+						}
+						i--;
+					}
+					if (strArr.length == 0) {
+						alert("输入不合法！");
+						return ;
+					}
+					return strArr;
+				}
+
+				//点击某个数字删除
+				function reFresh() {
+					for (var i = 0; i < oSpan.length; i++) {
+						oSpan[i].index = i;
+						oSpan[i].onclick = function() {
+							spanArr.splice(this.index, 1);
+							display();
+						}
+					}
+				}
+
+				//显示数组元素，重新获取span
+				function display() {
+					var text = "";
+					for (var i = 0; i < spanArr.length; i++) {
+						text += "<span>" + spanArr[i] + "</span>";
+					}
+					Display.innerHTML = text;
+					reFresh();
+				}
 			}
 		</script>
 	</head>
@@ -118,14 +229,6 @@
 				<button type="button">查询</button>
 			</div>
 			<div id="display">
-				<span class="find">11</span>
-				<span>22</span>
-				<span>11</span>
-				<span>22</span>
-				<span>11</span>
-				<span>22</span>
-				<span>11</span>
-				<span>22</span>
 			</div>
 		</div>
 	</body>

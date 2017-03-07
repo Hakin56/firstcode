@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>听指令的小方块</title>
+		<style media="screen">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			body {
+				font: 13px Arial;
+			}
+			.outer {
+				width: 480px;
+				margin: 20px auto;
+				padding: 10px;
+				border-radius: 8px;
+				border: 1px solid #b5b5b5;
+				box-shadow: 3px 3px 5px 1px #dddddd;
+			}
+			.container table {
+				text-align: center;
+				line-height: 40px;
+				padding-right: 20px;
+			}
+			tr {
+				float: left;
+			}
+			td {
+				float: left;
+				border-right: 1px solid red;
+				border-bottom: 1px solid red;
+				height: 40px;
+				width: 40px;
+			}
+			.container table tr td:first-child {
+				border-color: white;
+				border-right: 1.5px solid red;
+			}
+			.container table tr td:last-child {
+				/*border-color: white !important;*/
+				border-right: 1.5px solid red;
+			}
+			.container table tr:first-child td {
+				border-color: white;
+				border-bottom: 1.5px solid red;
+			}
+			.container table tr:last-child td {
+				/*border-color: white !important;*/
+				border-bottom: 1.5px solid red;
+			}
+			.noneborder {
+				border-bottom-color: white !important;
+			}
+			#control {
+				text-align: center;
+				margin: 15px 0;
+			}
+			#control input {
+				padding: 5px 10px;
+				border-radius: 5px;
+				outline: none;
+				border: 1px solid #8e8e8e;
+				display: inline-block;
+				vertical-align: bottom;
+			}
+			#control button {
+				height: 27px;
+				width: 50px;
+				display: inline-block;
+				vertical-align: bottom;
+				margin-left: 15px;
+				border-radius: 5px;
+				border: 1px solid #8e8e8e;
+				background: white;
+				outline: none;
+				cursor: pointer;
+			}
+			#control button:hover {
+				background: #20a3d4;
+				border-color: #20a3d4;
+				color: white;
+			}
+			.focus {
+				border-color: #3267ee !important;
+				box-shadow: 0 0 5px 1.5px #5790ff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="outer">
+			<div class="container">
+				<table>
+					<tr>
+						<td class="noneborder"></td>
+						<td>1</td>
+						<td>2</td>
+						<td>3</td>
+						<td>4</td>
+						<td>5</td>
+						<td>6</td>
+						<td>7</td>
+						<td>8</td>
+						<td>9</td>
+						<td>10</td>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>4</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>5</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>6</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>7</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>8</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>9</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="noneborder">10</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div id="control">
+				<input type="text" class="focus">
+				<button type="button">执行</button>
+			</div>
+		</div>
+	</body>
+</html>
