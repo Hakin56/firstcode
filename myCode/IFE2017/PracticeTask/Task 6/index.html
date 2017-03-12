@@ -16,22 +16,23 @@
 				position: absolute;
 				top: 50%;
 				left: 50%;
-				width: 350px;
-				height: 180px;
+				width: 300px;
+				height: 160px;
 				background: white;
-				margin-left: -175px;
-				margin-top: -90px;
+				margin-left: -150px;
+				margin-top: -80px;
 				border: 2px solid #658bff;
 				border-radius: 8px;
 			}
-			#menu h2 {
+			#title {
 				color: snow;
+				cursor: move;
 				padding: 3px 10px;
 				background: #6dfee4;
 				border-top-left-radius: 6px;
 				border-top-right-radius: 6px;
 			}
-			#menu h2 span {
+			#title span {
 				color: #a4a4a4;
 				background: #ffffff;
 				border: 1px solid black;
@@ -45,7 +46,8 @@
 				cursor: pointer;
 			}
 			#menu .quyu {
-				padding: 3px 10px;
+				padding: 10px 16px;
+				line-height: 30px;
 			}
 			#over {
 				display: none;
@@ -55,23 +57,206 @@
 				width: 100%;
 				height: 100%;
 				background: #000000;
-				opacity: 0.5;
+				opacity: 0.4;
+			}
+			#left, #lefTop, #top, #rigTop, #right, #rigBot, #bottom, #lefBot {
+				position: absolute;
+				background: red;
+				opacity: 0;
+				overflow: hidden;
+			}
+			#left, #right {
+				width: 3px;
+				height: 100%;
+				cursor: w-resize;
+			}
+			#top, #bottom {
+				width: 100%;
+				height: 3px;
+				cursor: n-resize;
+			}
+			#left, #top, #right{
+				top: -2px;
+			}
+			#top, #right {
+				right: -2px;
+			}
+			#bottom {
+				bottom: -2px;
+			}
+			#bottom, #left {
+				left: -2px;
 			}
 		</style>
 		<script type="text/javascript">
+			function getId(id) {
+				return document.getElementById(id);
+			}
+
+			var ss = {
+				minWid: 300,
+				minHei: 160
+			};
+
+			//拖动函数
+			function Move() {
+				var menu = getId("menu");
+				var title = getId("title");
+				var close = getId("close");
+				var over = getId("over");
+				var mouseX = mouseY = 0;
+
+				title.onmousedown = function(event) {
+					var event = event || window.event;
+					mouseX = event.clientX - menu.offsetLeft;
+					mouseY = event.clientY - menu.offsetTop;
+
+					document.onmousemove = function(event) {
+						var event = event || window.event;
+						var menuL = event.clientX - mouseX;
+						var menuT = event.clientY - mouseY;
+						var maxL = document.documentElement.clientWidth - menu.offsetWidth;
+						var maxT = document.documentElement.clientHeight - menu.offsetHeight -2;
+
+						menuL <= 0 && (menuL = 0);
+						menuT <= 0 && (menuT = 0);
+						menuL >= maxL && (menuL = maxL);
+						menuT >= maxT && (menuT = maxT);
+
+						menu.style.left = menuL + "px";
+						menu.style.top = menuT + "px";
+						menu.style.margin = 0 + "px";
+					}
+
+					document.onmouseup = function() {
+						document.onmousemove = null;
+						document.onmouseup = null;
+						this.releaseCapture && this.releaseCapture();
+					}
+					this.setCapture && this.setCapture();
+				}
+
+				close.onclick = function() {
+					menu.style.display = "none";
+					over.style.display = "none";
+				}
+				close.onmousedown = function() {
+					this.onfocus = function() {this.blur();};
+					(event || window.event).cancelBubble = true;
+				}
+			}
+
+			function Gaibian(menu, elem, canX, canY, canL, canT) {
+				var over = getId("over");
+				elem.onmousedown = function(event) {
+					if (!canX && canY && !canL && !canT) {
+						console.log("bottom");
+					}
+					var event = event || window.event;
+					var oldX = event.clientX;
+					var oldY = event.clientY;
+					var mWidth = menu.offsetWidth;
+					var mHeight = menu.offsetHeight;
+					var mLeft = menu.offsetLeft;
+					var mTop = menu.offsetTop;
+					document.onmousemove = function(event) {
+						if (!canX && canY && !canL && !canT) {
+							console.log("bottom2");
+						}
+						var event = event || window.event;
+
+						var disX = event.clientX - oldX;
+						var disY = event.clientY - oldY;
+						if (!canX && canY && !canL && !canT) {
+							console.log("bottom");
+							console.log("disX: " + disX);
+							console.log("disY: " + disY);
+						}
+						var maxWid = canL ? (mWidth + mLeft) : (over.offsetWidth - mLeft - 4);
+						var maxHei = canT ? (mHeight + mTop) : (over.offsetHeight - mTop - 4);
+
+						var newWidth = 0;
+						if (canX) {
+							if (canL) {
+								newWidth = mWidth - disX - 4;
+							} else {
+								newWidth = mWidth + disX - 4;
+							}
+						} else {
+							newWidth = mWidth -4;
+						}
+
+						var newHeight = 0;
+						if (canY) {
+							if (canT) {
+								newHeight = mHeight - disY - 4;
+							} else {
+								newHeight = mHeight + disY - 4;
+							}
+						} else {
+							newHeight = mHeight -4;
+						}
+
+						newWidth < ss.minWid && (newWidth = ss.minWid);
+						newWidth > maxWid && (newWidth = maxWid);
+						newHeight < ss.minHei && (newHeight = ss.minHei);
+						newHeight > maxHei && (newHeight = maxHei);
+
+						menu.style.width = newWidth + "px";
+						menu.style.height = newHeight + "px";
+							console.log("newHeight: " + newHeight);
+							console.log("newWidth: " + newWidth);
+							console.log("maxWidth: " + maxWid);
+							console.log("maxHeight: " + maxHei);
+
+						var newLeft = canL ? (mLeft + disX) : mLeft;
+						var newTop = canT ? (mTop + disY) : mTop;
+
+						newLeft < 0 && (newLeft = 0);
+						newTop < 0 && (newTop = 0);
+
+						menu.style.margin = 0;
+						menu.style.top = newTop + "px";
+						menu.style.left = newLeft + "px";
+
+						if( (canL && newWidth == ss.minWid && disX > 0) || (canT && newHeight == ss.minHei && disY > 0) ) {
+							document.onmousemove = null;
+						}
+					}
+					document.onmouseup = function() {
+						document.onmousemove = null;
+					}
+				}
+
+			}
+
 			window.onload = function() {
 				var Btn = document.getElementsByTagName("button")[0];
-				var Clo = document.getElementById("close");
-				var Menu = document.getElementById("menu");
-				var Over = document.getElementById("over");
+				var Clo = getId("close");
+				var Menu = getId("menu");
+				var Over = getId("over");
+
+				var cleft = getId("left");
+				var ctop = getId("top");
+				var cright = getId("right");
+				var cbottom = getId("bottom");
+				var cleftop = getId("lefTop");
+				var crigtop = getId("rigTop");
+				var crigbot = getId("rigBot");
+				var clefbot = getId("lefBot");
+
 				Btn.onclick = function() {
 					Menu.style.display = "block";
 					Over.style.display = "block";
 				}
-				Clo.onclick = function() {
-					Menu.style.display = "none";
-					Over.style.display = "none";
-				}
+
+				Move();
+
+				Gaibian(menu, cleft, true, false, true, false);
+				Gaibian(menu, ctop, false, true, false, true);
+				Gaibian(menu, cright, true, false, false, false);
+				Gaibian(menu, cbottom, false, true, false, false);
+
 			}
 		</script>
 	</head>
@@ -79,8 +264,16 @@
 		<center><button type="button">提示框</button></center>
 		<div id="over"></div>
 		<div id="menu">
-			<h2>温馨提示<span id="close">X</span></h2>
-			<div class="quyu">好爱你呀！</div>
+			<h2 id="title">温馨提示<span id="close">X</span></h2>
+			<div class="quyu">
+				1.可以通过边缘改变大小。<br>
+				2.有最小宽高。<br>
+				3.可以拖动位置。<br>
+			</div>
+			<div id="left"></div>
+			<div id="top"></div>
+			<div id="right"></div>
+			<div id="bottom"></div>
 		</div>
 
 	</body>

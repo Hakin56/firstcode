@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>UI组件之排序表格</title>
+	</head>
+	<style media="screen">
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		body {
+			font: 16px Arial;
+		}
+		#outer {
+			margin: 20px auto;
+			width: 500px;
+		}
+		#outer table {
+			width: 500px;
+			line-height: 40px;
+			text-align: center;
+			border-collapse: collapse;
+		}
+		td, th {
+			border: 1.5px solid #bebebe;
+		}
+		#outer table td {
+			color: #595959;
+		}
+		#outer table th {
+			background: #757575;
+			color: #fff;
+			position: relative;
+		}
+		#outer table th span {
+			position: absolute;
+			right: 0;
+			height: 50%;
+			width: 25px;
+			cursor: pointer;
+		}
+		#outer table th span:hover {
+			background: #a2a2a2;
+		}
+		#outer table th span:nth-child(1){
+			top: 0;
+		}
+		#outer table th span:nth-child(2){
+			top: 50%;
+		}
+
+		.up {
+			display: block;
+			width: 0;
+			height: 0px;
+			margin-left: 8.5px;
+			margin-top: 8px;
+			border-left: 5px solid transparent;
+			border-right: 5px solid transparent;
+			border-bottom: 5px solid #fff;
+		}
+		.down {
+			display: block;
+			width: 0;
+			height: 0;
+			margin-left: 8.5px;
+			margin-top: 6px;
+			border-left: 5px solid transparent;
+			border-right: 5px solid transparent;
+			border-top: 5px solid #fff;
+		}
+	</style>
+	<script type="text/javascript">
+
+		//数据
+		var sData = [
+			["小明", 80, 90, 70, 240],
+			["小红", 90, 60, 90, 240],
+			["小亮", 60, 100, 70, 230]
+		];
+
+		//初始化表格，更新表格。根据传入的 sArray 。
+		function initTable(elem, sArray) {
+			var newData = "";
+			for (var i = 0; i < sArray.length; i++) {
+				newData += "<tr><td>" + sArray[i][0] + "</td><td>" + sArray[i][1] + "</td><td>" + sArray[i][2] + "</td><td>" + sArray[i][3] + "</td><td>" + sArray[i][4] + "</td></tr>";
+			}
+			elem.innerHTML =  newData;
+		}
+
+		//根据要求（dir,大小方向）对数组进行排序。
+		function Paixu(dir, num) {
+			var sList = sData;
+			if (dir == "up") {    //由小到大
+				return sList.sort(function(a,b){return a[num] - b[num];});
+			} else if(dir == "down") {    //由大到小
+				return sList.sort(function(a,b){return b[num] - a[num];});
+			}
+		}
+
+		window.onload = function() {
+			var oSpan = document.getElementsByTagName("span");
+			var result = document.getElementById("result");
+			var list = new Array();
+			var snum = 0;
+
+			//调用函数，初始化
+			initTable(result, sData);
+
+			//由大到小的事件绑定
+			for (var i = 0; i < oSpan.length; i += 2) {
+				oSpan[i].index = i;
+				oSpan[i].onclick = function() {
+					snum = this.index / 2 + 1;
+					list = Paixu("up", snum);
+					initTable(result, list);
+				}
+			}
+
+			//由小到大的事件绑定
+			for (var i = 1; i < oSpan.length; i += 2) {
+				oSpan[i].index = i;
+				oSpan[i].onclick = function() {
+					num = (this.index - 1) / 2 + 1;
+					list = Paixu("down", num);
+					initTable(result, list);
+				}
+			}
+		}
+	</script>
+	<body>
+		<div id="outer">
+			<table>
+				<tbody>
+					<tr>
+						<th>姓名</th>
+						<th>语文<span><a href="javascript: ;" class="up"></a></span><span><a href="javascript: ;" class="down"></a></span></th>
+						<th>数学<span><a href="javascript: ;" class="up"></a></span><span><a href="javascript: ;" class="down"></a></span></th>
+						<th>英语<span><a href="javascript: ;" class="up"></a></span><span><a href="javascript: ;" class="down"></a></span></th>
+						<th>总分<span><a href="javascript: ;" class="up"></a></span><span><a href="javascript: ;" class="down"></a></span></th>
+					</tr>
+				</tbody>
+				<tbody id=result>
+					<!-- 显示排序结果的区域 -->
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
