@@ -20,15 +20,29 @@
 				flex-grow: 1;
 				background: white;
 			}
+			input {
+				width: 150px;
+				height: 30px;
+				margin: 8px 0;
+				font-size: 22px;
+				padding: 4px 8px;
+				border-radius: 5px;
+				outline: none;
+				border: 1px solid #828282;
+			}
+			.focus {
+				border-color: #4d5eff;
+				box-shadow: 0 0 5px 1.5px #5781ff;
+			}
 			#root {
-				width: 600px;
+				width: 700px;
 				height: 300px;
 				margin: 20px auto;
 				display: flex;
 			}
 			.btn {
 				margin: 40px auto;
-				width: 400px;
+				width: 250px;
 				text-align: center;
 			}
 			.btn button {
@@ -50,6 +64,9 @@
 			.now {
 				background: #0f0 !important;
 			}
+			.find {
+				background: #ff0000 !important;
+			}
 		</style>
 		<script type="text/javascript">
 			var ss = {
@@ -59,26 +76,21 @@
 			//先序遍历
 			function preOrder(elem) {
 				if (elem) {
+					var tree = elem.children;
 					ss.list.push(elem);    //右入队列
-					preOrder(elem.firstElementChild);   //递归
-					preOrder(elem.lastElementChild);
-				}
-			}
-
-			//中序遍历
-			function inOrder(elem) {
-				if (elem) {
-					inOrder(elem.firstElementChild);
-					ss.list.push(elem);
-					inOrder(elem.lastElementChild);
+					for (var i = 1; i < tree.length; i++) {
+						preOrder(tree[i])
+					}
 				}
 			}
 
 			//后序遍历
 			function postOrder(elem) {
 				if (elem) {
-					postOrder(elem.firstElementChild);
-					postOrder(elem.lastElementChild);
+					var tree = elem.children;
+					for (var i = 1; i < tree.length; i++) {
+						postOrder(tree[i])
+					}
 					ss.list.push(elem);
 				}
 			}
@@ -99,52 +111,86 @@
 				}, 400);
 			}
 
+			//搜索函数
+			function Search(str) {
+				var p = ss.list.shift();   //左出队列
+				var last = timer = null;
+				timer = setInterval(function() {
+
+					last && (last.removeAttribute("class"));    //父节点样式清除
+					if (!p) {
+						clearInterval(timer);    //定时器出口
+						alert("没找到！");
+						return ;
+					}
+					p.className = "now";
+					if (p.firstElementChild.innerText == str) {
+						p.className = "find";
+						ss.list = [];
+						clearInterval(timer);
+						alert("找到啦！");
+						return ;
+					}
+					last = p;
+					p = ss.list.shift();    //新节点
+				}, 400);
+			}
 			window.onload = function() {
 				var oBtn = document.getElementsByTagName("button");
 				var oRoot = document.getElementById("root");
+				var oInput = document.getElementsByTagName("input")[0];
+
+				oInput.onfocus = function() {
+					this.className = "focus";
+				}
+				oInput.onblur = function() {
+					this.removeAttribute("class");
+				}
 
 				oBtn[0].onclick = function() {
 					preOrder(oRoot);
 					disPlay();
 				}
 				oBtn[1].onclick = function() {
-					inOrder(oRoot);
+					postOrder(oRoot);
 					disPlay();
 				}
 				oBtn[2].onclick = function() {
-					postOrder(oRoot);
-					disPlay();
+					preOrder(oRoot);
+					Search(oInput.value);
 				}
 			}
 		</script>
 	</head>
 	<body>
-		<div id="root">
-			<div>
-				<div>
-					<div></div>
-					<div></div>
+		<div id="root"><span>15</span>
+			<div><span>13</span>
+				<div><span>9</span>
+					<div><span>1</span></div>
+					<div><span>2</span></div>
+					<div><span>4</span></div>
 				</div>
-				<div>
-					<div></div>
-					<div></div>
+				<div><span>10</span>
+					<div><span>3</span></div>
 				</div>
 			</div>
-			<div>
-				<div>
-					<div></div>
-					<div></div>
-				</div>
-				<div>
-					<div></div>
-					<div></div>
+			<div><span>14</span>
+
+				<div><span>12</span>
+					<div><span>11</span>
+						<div><span>5</span></div>
+						<div><span>6</span></div>
+					</div>
+					<div><span>7</span></div>
+					<div><span>8</span></div>
 				</div>
 			</div>
 		</div>
 		<footer class="btn">
 			<button type="button">前序遍历</button>
-			<button type="button">中序遍历</button>
 			<button type="button">后序遍历</button>
+			<input type="text">
+			<button type="button">查找</button>
 		</footer>
 	</body>
 </html>
