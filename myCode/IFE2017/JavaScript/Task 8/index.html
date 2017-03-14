@@ -140,6 +140,7 @@
 				var oRoot = document.getElementById("root");
 				var oInput = document.getElementsByTagName("input")[0];
 
+				//为输入框获取与失去焦点变换样式
 				oInput.onfocus = function() {
 					this.className = "focus";
 				}
@@ -147,16 +148,21 @@
 					this.removeAttribute("class");
 				}
 
+				//先序遍历
 				oBtn[0].onclick = function() {
 					preOrder(oRoot);
 					disPlay();
 				}
+
+				//后序遍历
 				oBtn[1].onclick = function() {
 					postOrder(oRoot);
 					disPlay();
 				}
+
+				//查找按钮
 				oBtn[2].onclick = function() {
-					preOrder(oRoot);
+					preOrder(oRoot);       //通过先序遍历的方法查找
 					Search(oInput.value);
 				}
 			}

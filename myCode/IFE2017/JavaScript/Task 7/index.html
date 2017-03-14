@@ -103,14 +103,19 @@
 				var oBtn = document.getElementsByTagName("button");
 				var oRoot = document.getElementById("root");
 
+				//先序遍历
 				oBtn[0].onclick = function() {
 					preOrder(oRoot);
 					disPlay();
 				}
+
+				//中序遍历
 				oBtn[1].onclick = function() {
 					inOrder(oRoot);
 					disPlay();
 				}
+
+				//后序遍历
 				oBtn[2].onclick = function() {
 					postOrder(oRoot);
 					disPlay();
