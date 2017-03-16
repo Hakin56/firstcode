@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>鼠标悬浮模糊效果</title>
+		<style media="screen">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			body {
+				font: 15px Arial;
+				background: #dbdbdb;
+			}
+			#outer {
+				margin: 40px auto;
+				width: 600px;
+				height: 360px;
+				padding: 30px;
+				text-align: center;
+				border-radius: 10px;
+				position: relative;
+			}
+			#outer img {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: -1;
+				border-radius: 10px;
+				transition: all .8s;
+			}
+			#outer:hover img{
+				-webkit-filter: blur(5px);
+
+			}
+			#content p {
+				transition: all .8s;
+			}
+			#outer:hover #content p {
+				padding-top: 125px;
+			}
+			#outer:hover #content {
+				opacity: 1;
+			}
+			#outer:hover #content::before {
+				height: 100%;
+				visibility: visible;
+				top: 0;
+			}
+			#outer:hover #content::after {
+				width: 100%;
+				visibility: visible;
+				left: 0;
+			}
+			#content {
+				height: 100%;
+				width: 100%;
+				background: #ffffff;
+				background-image: -webkit-linear-gradient(left, #00ff95, #3662ff, #e5ff12, #ff4422, #e5ff12, #3662ff, #00ff95, #3662ff, #e5ff12, #ff4422, #e5ff12, #3662ff, #00ff95);
+				-webkit-background-clip: text;
+				color: transparent;
+				background-size: 200% 100%;
+				animation: streamer 8s infinite linear;
+				position: relative;
+				opacity: 0;
+				transition: all .5s;
+			}
+			#content::before {
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 50%;
+				width: 100%;
+				height: 0;
+				border: 3px solid #fff;
+				border-width: 0 3px;
+				overflow: hidden;
+				visibility: hidden;
+				transition: all .8s;
+				box-sizing: border-box;
+			}
+			#content::after {
+				content: '';
+				position: absolute;
+				left: 50%;
+				top: 0;
+				width: 0;
+				height: 100%;
+				border: 3px solid #fff;
+				border-width: 3px 0;
+				overflow: hidden;
+				visibility: hidden;
+				transition: all .8s;
+				box-sizing: border-box;
+			}
+			#content p {
+				font-size: 35px;
+				font-weight: bold;
+				padding-top: 150px;
+			}
+			#content a {
+				display: block;
+				width: 60px;
+				margin: 0 auto;
+				text-decoration: none;
+				color: transparent;
+				padding-top: 30px;
+			}
+			@-webkit-keyframes streamer {
+				0% {
+					background-position: 0 0;
+				}
+				100% {
+					background-position: 100% 0;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="outer">
+			<img src="timg.jpg">
+			<div id="content">
+				<p>欢迎来到我的空间</p>
+				<a href="javascript:;">点击进入</a>
+			</div>
+		</div>
+	</body>
+</html>
