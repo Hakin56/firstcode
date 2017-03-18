@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>动态数据绑定(三)</title>
+	</head>
+	<style media="screen">
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		#outer {
+			margin: 50px auto;
+			width: 200px;
+		}
+		.box {
+			margin-bottom: 30px;
+			font-weight: 700;
+		}
+		#check+label, .RRR+label {
+			width: 16px;
+			height: 16px;
+			border: 1px solid #d9d9d9;
+			cursor: pointer;
+			display: inline-block;
+			position: relative;
+		}
+		#check:checked+label, .RRR:checked+label {
+			border-color: #d73d32;
+		}
+		#check:checked+label::after {
+			content: '\2714';
+			color: red;
+			font-size: 12px;
+			margin: auto;
+			position: absolute;
+			left: 50%;
+			margin-left: -5px;
+		}
+		input {
+			margin: 0;
+			display: none;
+		}
+
+		.RRR+label {
+			border-radius: 50%;
+			margin-right: 10px;
+		}
+		.RRR:checked+label::after {
+			content: " ";
+			border-radius: 50%;
+			background: red;
+			width: 10px;
+			height: 10px;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin-left: -5.1px;
+			margin-top: -5.1px;
+		}
+
+	</style>
+	<body>
+		<div id="outer">
+			<div class="box">
+				<input type="checkbox" id="check"><label for="check"></label>
+			</div>
+			<div class="radio">
+				<input type="radio" class="RRR" name="choice" id="xRadio1"><label for="xRadio1"></label>
+				<input type="radio" class="RRR" name="choice" id="xRadio2"><label for="xRadio2"></label>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+
+	</script>
+</html>

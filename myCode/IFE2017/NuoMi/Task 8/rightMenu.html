@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>自定义右键菜单</title>
+		<style media="screen">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			body {
+				font: 13px/1.5 Arial;
+			}
+			#mouseMenu {
+				display: none;
+				position: absolute;
+				background: #c7c7c7;
+				border: 1px solid #808080;
+				width: 80px;
+			}
+			#mouseMenu ul {
+				list-style-type: none;
+			}
+			#mouseMenu ul li {
+				padding: 2px 5px;
+				cursor: default;
+				transition: .3s;
+			}
+			#mouseMenu ul li:not(:last-child) {
+				border-bottom: 1px solid #dfdfdf;
+			}
+			#mouseMenu ul li:hover {
+				background: #e3e3e3;
+			}
+		</style>
+		<script type="text/javascript">
+
+
+			(function() {
+				var PosX;
+				var PosY;
+
+				//阻止默认事件
+				document.oncontextmenu = function(event) {
+					event.preventDefault();
+				}
+
+				//鼠标移动时事件函数
+				document.onmousemove = function(event) {
+					var event = event || window.event;
+					var mouMenu = document.getElementById("mouseMenu");
+					var winWidth = document.documentElement.clientWidth;    //获取当前窗口的宽度
+					var winHeight = document.documentElement.clientHeight;    //当前窗口高度
+					var wwidth = 80;   //mouMenu.offsetWidth;
+					var hheight = 95.33;   //mouMenu.offsetHeight;
+
+					document.onmousedown = function(event) {
+						var event = event || window.event;
+
+						PosX = event.clientX;	//获取鼠标点击时的鼠标位置
+						PosY = event.clientY;
+
+						if (event.button == 2) {   //表示点击的是右键
+
+							(winWidth - PosX) > wwidth || (PosX = PosX - wwidth);
+							(winHeight - PosY) > hheight || (PosY = PosY - hheight);    //判断是否超出当前窗口范围，并且处理
+
+							mouMenu.style.display = "block";
+							mouMenu.style.top = PosY + "px";
+							mouMenu.style.left = PosX + "px";
+						} else {
+							mouMenu.style.display = "none";
+						}
+					}
+				}
+			})();
+
+		</script>
+	</head>
+	<body>
+		<div id="mouseMenu">
+			<ul>
+				<li>选项一</li>
+				<li>选项二</li>
+				<li>选项三</li>
+				<li>选项四</li>
+			</ul>
+		</div>
+	</body>
+</html>
